@@ -4,12 +4,20 @@ module I18n
       def initialize(@path : String)
       end
 
-      def load : TranslationsHash
-        raw_translations = [] of String
+      # I18n::Backend::Yaml.embed(["#{__DIR__}/locales"])
+      # \{{ run("../src/i18n/loader/yaml_embed", {{dir}}) }}
+      macro embed(dirs)
+        {% begin %}
+          {% for dir in dirs %}
+            \{{ run("i18n/loader/yaml_embed", {{dir}}) }}
+          {% end %}
+        {% end %}
+      end
 
-        Dir.glob(@path + "/**/*.yml", @path + "/**/*.yaml") do |filename|
-          raw_translations << File.read(filename)
-        end
+      def load : TranslationsHash
+        # Dir.glob(@path + "/**/*.yml") do |filename|
+        #   raw_translations << File.read(filename)
+        # end
 
         translations_data = TranslationsHash.new
         raw_translations.each do |data|

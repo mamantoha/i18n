@@ -5,8 +5,6 @@ module I18n
       end
 
       def load : TranslationsHash
-        raw_translations = [] of String
-
         Dir.glob(@path + "/**/*.json") do |filename|
           raw_translations << File.read(filename)
         end
